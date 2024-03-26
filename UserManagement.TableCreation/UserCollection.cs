@@ -1,0 +1,98 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UserManagement.Repository;
+using UserManagement.TableCreation;
+
+namespace UserManagementProcess
+{
+    public class UserCollection : IRepository<User,int>
+    {
+        TableCreationDbContext dbContext = new TableCreationDbContext();
+
+        public User FindById(int id)
+        {
+            try
+            {
+            return dbContext.Users.Where(c=>c.IsActive==true).FirstOrDefault(c=>c.UserId==id);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            try
+            {
+
+            return dbContext.Users.Where(c=>c.IsActive==true).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public IEnumerable<User> GetByCriteria(string filterCriteria)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveById(int id)
+        {
+            try
+            {
+                var emp = dbContext.Users.Find(id);
+                if (emp is not null)
+                {
+                    emp.IsActive = false;
+                    Upsert(emp);
+                }
+                else
+                {
+                    Console.WriteLine("This id doesn't Exist");
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+          
+        }
+
+        public void Upsert(User entity)
+        {
+            try
+            {
+                var emp = FindById(entity.UserId);
+                if (emp is null)
+                {
+                    dbContext.Users.Add(entity);
+                    dbContext.SaveChanges();
+                }
+                else
+                {
+                    dbContext.Users.Where(
+                        c => c.UserId == entity.UserId)
+                        .ExecuteUpdate(setters => setters.SetProperty(p => p.FirstName, entity.FirstName)
+                        .SetProperty(s => s.LastName, entity.LastName));
+                    dbContext.SaveChanges();
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+           
+        }
+    }
+}
