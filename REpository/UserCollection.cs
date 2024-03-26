@@ -9,7 +9,7 @@ using UserManagement.TableCreation;
 
 namespace UserManagementProcess
 {
-    public class UserCollection : IRepository<User, int>, IUserRepository<UserRole, int>
+    public class UserCollection : IUserRepository<User,int> //here we can directly use IUserRepository as its is inherite from Irepository
     {
         TableCreationDbContext dbContext = new TableCreationDbContext();
 
@@ -82,16 +82,16 @@ namespace UserManagementProcess
           
         }
 
-
+        
 
         public UserRole UpdateUserRole(UserRole userRole)
         {
-            var item = dbContext.UserRoles.Find(userRole);
-            if(item is not null && item.IsActive==false)
+            var item = dbContext.UserRoles.FirstOrDefault(c => c.UserId == userRole.UserId);
+            if(item is not null)
             {
                 dbContext.UserRoles.Where(
             c => c.UserId == userRole.UserId)
-            .ExecuteUpdate(setters => setters.SetProperty(p => p.IsActive, true));
+            .ExecuteUpdate(setters => setters.SetProperty(p => p.IsActive, true).SetProperty(p=>p.RoleId,userRole.RoleId));
                 dbContext.SaveChanges();
                 return item;
             }
@@ -130,9 +130,6 @@ namespace UserManagementProcess
            
         }
 
-        UserRole IUserRepository<UserRole, int>.GetRoleIdForUser(int id)
-        {
-            throw new NotImplementedException();
-        }
+  
     }
 }

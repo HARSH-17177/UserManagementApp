@@ -7,10 +7,10 @@ using UserManagement.TableCreation;
 
 namespace UserManagement.Repository
 {
-    public interface IUserRepository<Tentity,TIdentity> : IRepository<User,int>
+    public interface IUserRepository<Tentity, TIdentity> : IRepository<Tentity,TIdentity>
     {
-   Tentity GetRoleIdForUser(TIdentity id);
-        Tentity UpdateUserRole(Tentity userRole);
+        int GetRoleIdForUser(int id);
+        UserRole UpdateUserRole(UserRole userRole);
     }
    
 }

@@ -11,6 +11,7 @@ namespace UserManagementApp
     {
         static UserProcess userProcess = new UserProcess();
         static RoleProcess roleProcess = new RoleProcess();
+        static UserRolesProces UserRolesProces = new UserRolesProces();
         static void showAllUsers()
             {
             userProcess.GetUsers().ToList().ForEach(x => Console.WriteLine($"UserId : {x.UserId}\nUserName : {x.UserName}\nFirstName : {x.FirstName}\nLastName : {x.LastName}\nPassword : {x.Password}\n-------------------------------"));
@@ -132,6 +133,44 @@ namespace UserManagementApp
             {
                 Console.WriteLine("Enter Correct id");
             }
+        }
+
+        static void UpdateUserRole()
+        {
+           
+            Console.Write("Enter your UserId : ");
+            int userid =int.Parse(Console.ReadLine());
+            var roles = roleProcess.GetRoles();
+            foreach ( var role in roles )
+            {
+                Console.Write($"{role.RoleName} |");
+            }
+
+            Console.Write("Enter Role Name: ");
+            string roleName = Console.ReadLine();
+
+
+            Console.Write("Save this mapping? Y/n: ");
+            char saveChoice = Console.ReadKey().KeyChar;
+
+            if (char.ToUpper(saveChoice) == 'Y')
+            {
+               var item= UserRolesProces.UpdateRole(roleName, userid);
+              if(item is not null)
+                {
+                Console.WriteLine("\nMapping saved successfully!");
+
+                }
+              else
+                {
+                    Console.WriteLine("\nMapping failed");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nMapping discarded.");
+            }
+
         }
         static void Main(string[] args)
         {
@@ -288,24 +327,12 @@ namespace UserManagementApp
             Console.Clear();
             Console.WriteLine("************** Login Management System ***************");
             Console.WriteLine("************** Manage User Roles ***************");
-            Console.Write("Enter User Id: ");
-            string userId = Console.ReadLine();
-            Console.Write("Roles available: [ \"Role1\", \"Role2\"...]");
-            Console.Write("Enter Role Name: ");
-            string roleName = Console.ReadLine();
 
-            Console.Write("Save this mapping? Y/n: ");
-            char saveChoice = Console.ReadKey().KeyChar;
+            UpdateUserRole();
 
-            if (char.ToUpper(saveChoice) == 'Y')
-            {
-                // Find the role Id based on the selected role name and save the mapping
-                Console.WriteLine("\nMapping saved successfully!");
-            }
-            else
-            {
-                Console.WriteLine("\nMapping discarded.");
-            }
+
+
+ 
         }
     }
 
