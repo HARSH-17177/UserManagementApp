@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UserManagement.TableCreation\UserManagement.TableCreation.csproj" />
+  </ItemGroup>
+
 </Project>

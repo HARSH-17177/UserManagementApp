@@ -9,7 +9,7 @@ using UserManagement.TableCreation;
 
 namespace UserManagementProcess
 {
-    public class UserCollection : IRepository<User,int>
+    public class UserCollection : IRepository<User, int>, IUserRepository<UserRole, int>
     {
         TableCreationDbContext dbContext = new TableCreationDbContext();
 
@@ -46,6 +46,20 @@ namespace UserManagementProcess
             throw new NotImplementedException();
         }
 
+        public int GetRoleIdForUser(int userid)
+        {
+            try
+            {
+                return dbContext.UserRoles.Where(c => c.IsActive == true).FirstOrDefault(c => c.UserId == userid).RoleId;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return -1;
+            }
+        }
+
         public void RemoveById(int id)
         {
             try
@@ -66,6 +80,27 @@ namespace UserManagementProcess
                 Console.WriteLine(e.Message);
             }
           
+        }
+
+
+
+        public UserRole UpdateUserRole(UserRole userRole)
+        {
+            var item = dbContext.UserRoles.Find(userRole);
+            if(item is not null && item.IsActive==false)
+            {
+                dbContext.UserRoles.Where(
+            c => c.UserId == userRole.UserId)
+            .ExecuteUpdate(setters => setters.SetProperty(p => p.IsActive, true));
+                dbContext.SaveChanges();
+                return item;
+            }
+            else
+            {
+                dbContext.UserRoles.Add(userRole);
+                dbContext.SaveChanges();
+            }
+            return dbContext.UserRoles.FirstOrDefault(c => c.UserId == userRole.UserId);
         }
 
         public void Upsert(User entity)
@@ -93,6 +128,11 @@ namespace UserManagementProcess
                 Console.WriteLine(e.Message);
             }
            
+        }
+
+        UserRole IUserRepository<UserRole, int>.GetRoleIdForUser(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
