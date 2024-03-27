@@ -25,6 +25,9 @@ namespace UserManagementProcess
         public UserRole UpdateRole(string rollName, int userId)
         {
             UserRole userRole = new UserRole();
+            if (repository.FindById(userId) == null) throw new Exception("UserId not available");
+            else
+            {
 
             userRole.UserId = userId;
             Role role = roleRepository.GetAll().Where(c => c.RoleName == rollName).FirstOrDefault();
@@ -33,6 +36,7 @@ namespace UserManagementProcess
             userRole.RoleId = role.RoleId;
             userRole.IsActive = true;
             return userRepository.UpdateUserRole(userRole);
+            }
 
 
         }

@@ -21,7 +21,8 @@ namespace UserManagementApp
         static void findUserById()
         {
             Console.Write("Enter UserId : ");
-            var x = userProcess.FindUserById(int.Parse(Console.ReadLine()));
+            int id = int.TryParse(Console.ReadLine(), out id) ? id : 0;
+            var x = userProcess.FindUserById(id);
             //   Console.WriteLine($"{x.UserId} | {x.UserName} | {x.FirstName} | {x.LastName} | {x.Password} | {x.IsActive}");
             if(x is not null)
             {
@@ -79,7 +80,7 @@ namespace UserManagementApp
         {
 
             Console.Write("Enter UserId to Update : ");
-            int id = int.Parse(Console.ReadLine());
+            int id = int.TryParse(Console.ReadLine(), out id) ? id : 0;
             Console.Write("Enter New FirstName : ");
             string FirstName = Console.ReadLine();
             Console.Write("Enter New LastName : ");
@@ -109,7 +110,8 @@ namespace UserManagementApp
         static void removeUser()
         {
             Console.Write("Enter UserId to Remove : ");
-            int id =int.Parse(Console.ReadLine());
+          
+         int id =   int.TryParse(Console.ReadLine(), out  id)?id:0;
             
            var x = userProcess.RemoveUser(id);
             if(x)
@@ -141,8 +143,8 @@ namespace UserManagementApp
         static void findRoleById()
         {
             Console.Write("Enter RoleId : ");
-            
-            var x = roleProcess.FindRolebyId(int.Parse(Console.ReadLine()));
+            int id = int.TryParse(Console.ReadLine(), out id) ? id : 0;
+            var x = roleProcess.FindRolebyId(id);
             //   Console.WriteLine($"{x.UserId} | {x.UserName} | {x.FirstName} | {x.LastName} | {x.Password} | {x.IsActive}");
             if(x is not null)
             {
@@ -182,7 +184,7 @@ namespace UserManagementApp
         static void updateRole()
         {
             Console.Write("Enter Role Id : ");
-            int id =int.Parse(Console.ReadLine());
+            int id = int.TryParse(Console.ReadLine(), out id) ? id : 0;
             Console.Write("Enter new RoleDescription : ");
             string roleDescription = Console.ReadLine();
             try
@@ -211,7 +213,7 @@ namespace UserManagementApp
         static void removeRole()
         {
             Console.Write("Enter RoleId to Remove : ");
-            int id = int.Parse(Console.ReadLine());
+            int id = int.TryParse(Console.ReadLine(), out id) ? id : 0;
             var x = roleProcess.RemoveRole(id);
             if (x)
             {
@@ -231,7 +233,7 @@ namespace UserManagementApp
         {
            
             Console.Write("Enter your UserId : ");
-            int userid =int.Parse(Console.ReadLine());
+            int id = int.TryParse(Console.ReadLine(), out id) ? id : 0;
             var roles = roleProcess.GetRoles();
             foreach ( var role in roles )
             {
@@ -247,7 +249,10 @@ namespace UserManagementApp
 
             if (char.ToUpper(saveChoice) == 'Y')
             {
-               var item= UserRolesProces.UpdateRole(roleName, userid);
+                try
+                {
+
+               var item= UserRolesProces.UpdateRole(roleName, id);
               if(item is not null)
                 {
                 Console.WriteLine("\nMapping saved successfully!");
@@ -257,6 +262,8 @@ namespace UserManagementApp
                 {
                     Console.WriteLine("\nMapping failed");
                 }
+                }
+                catch(Exception e) { Console.WriteLine("\n"+e.Message); }
             }
             else
             {

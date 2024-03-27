@@ -92,6 +92,7 @@ namespace UserManagementProcess
         public UserRole UpdateUserRole(UserRole userRole)
         {
             var item = dbContext.UserRoles.FirstOrDefault(c => c.UserId == userRole.UserId);
+            
             if(item is not null)
             {
                 dbContext.UserRoles.Where(
