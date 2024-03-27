@@ -53,7 +53,11 @@ namespace UserManagementProcess
             var emp = dbcontext.Roles.Find(id);
             if(emp is not null)
             {
-               emp.IsActive = false;
+                    dbcontext.UserRoles.Where(
+           c => c.RoleId == id)
+           .ExecuteUpdate(setters => setters.SetProperty(p => p.IsActive, false));
+                    dbcontext.SaveChanges();
+                    emp.IsActive = false;
                 Upsert(emp);
             }
             else

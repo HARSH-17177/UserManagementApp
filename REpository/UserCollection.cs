@@ -9,7 +9,7 @@ using UserManagement.TableCreation;
 
 namespace UserManagementProcess
 {
-    public class UserCollection : IUserRepository<User,int> //here we can directly use IUserRepository as its is inherite from Irepository
+    public class UserCollection : IUserRepository<User,int>
     {
         TableCreationDbContext dbContext = new TableCreationDbContext();
 
@@ -67,6 +67,11 @@ namespace UserManagementProcess
                 var emp = dbContext.Users.Find(id);
                 if (emp is not null)
                 {
+                    dbContext.UserRoles.Where(
+           c => c.UserId == id)
+           .ExecuteUpdate(setters => setters.SetProperty(p => p.IsActive, false));
+                    dbContext.SaveChanges();
+
                     emp.IsActive = false;
                     Upsert(emp);
                 }

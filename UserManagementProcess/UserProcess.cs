@@ -15,9 +15,12 @@ namespace UserManagementProcess
           
             User user = new User();
             user.UserName = username;
+          
             user.Password = password;
             user.FirstName = firstname;
+            if(firstname.Length == 0) throw new Exception("FirstName Length should be greater than 0");
             user.LastName = lastname;
+            if (lastname.Length == 0) throw new Exception("LastName Length should be greater than 0");
             user.IsActive = true;
   
             bool isDigit = false;
@@ -28,8 +31,7 @@ namespace UserManagementProcess
                     isDigit = true;
                 }
             }
-            try
-            {
+         
                 if (isDigit && password.Length >= 8 && username.Length >= 5 && firstname.Length > 0 && lastname.Length > 0)
                 {
 
@@ -40,12 +42,7 @@ namespace UserManagementProcess
                 {
                     return null;
                 }
-            }
-            catch(Exception ex) 
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+       
            
         }
         public User FindUserById(int id)
@@ -80,16 +77,18 @@ namespace UserManagementProcess
         }
         public bool UpdateUser(int id,string firstname,string lastname) {
             User usr = coll.FindById(id);
-            if (firstname.Length>0 )
+            if (firstname.Length > 0)
             {
                 usr.FirstName = firstname;
-               
+
             }
+            else throw new Exception("FirstName Length should be greater than 0");
             if (lastname.Length > 0)
             {
                  usr.LastName =lastname;
             }
-            if(usr is not null)
+            else throw new Exception("LastName Length should be greater than 0");
+            if (usr is not null)
             {
                 coll.Upsert(usr);
                 return true;

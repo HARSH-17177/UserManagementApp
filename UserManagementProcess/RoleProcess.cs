@@ -63,7 +63,7 @@ namespace UserManagementProcess
         }
         public bool UpdateRole(int id,string description)
         {
-            Role role = coll.FindById(id);
+            Role role = coll.FindById(id);if (role is null) throw new Exception("Role Not Found");
             if (description.Length > 0)
             {
                role.RoleDescription = description;

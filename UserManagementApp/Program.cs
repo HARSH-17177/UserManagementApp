@@ -14,14 +14,28 @@ namespace UserManagementApp
         static UserRolesProces UserRolesProces = new UserRolesProces();
         static void showAllUsers()
             {
-            userProcess.GetUsers().ToList().ForEach(x => Console.WriteLine($"UserId : {x.UserId}\nUserName : {x.UserName}\nFirstName : {x.FirstName}\nLastName : {x.LastName}\nPassword : {x.Password}\n-------------------------------"));
-        }
+           
+            userProcess.GetUsers().ToList().ForEach(x => { Console.ForegroundColor = ConsoleColor.Blue; Console.WriteLine($"UserId : {x.UserId}\nUserName : {x.UserName}\nFirstName : {x.FirstName}\nLastName : {x.LastName}\nPassword : {x.Password}"); Console.ResetColor(); Console.WriteLine("\n-------------------------------"); } );
+          
+             }
         static void findUserById()
         {
             Console.Write("Enter UserId : ");
             var x = userProcess.FindUserById(int.Parse(Console.ReadLine()));
             //   Console.WriteLine($"{x.UserId} | {x.UserName} | {x.FirstName} | {x.LastName} | {x.Password} | {x.IsActive}");
+            if(x is not null)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine($"UserId : {x.UserId}\nUserName : {x.UserName}\nFirstName : {x.FirstName}\nLastName : {x.LastName}\nPassword : {x.Password}");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("User Not Found");
+            Console.ResetColor();
+
+            }
         }
         static void insertNewUser()
         {
@@ -33,9 +47,33 @@ namespace UserManagementApp
             string FirstName = Console.ReadLine();
             Console.Write("Enter LastName : ");
             string LastName = Console.ReadLine();
-          var  x = userProcess.InsertUser(username, password, FirstName, LastName);
-            Console.WriteLine("user Inserted");
-            Console.WriteLine($"UserId : {x.UserId}\nUserName : {x.UserName}\nFirstName : {x.FirstName}\nLastName : {x.LastName}\nPassword : {x.Password}");
+            try
+            {
+                
+                var  x = userProcess.InsertUser(username, password, FirstName, LastName);
+                if (x.UserId!=0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("user Inserted");
+                    Console.WriteLine($"UserId : {x.UserId}\nUserName : {x.UserName}\nFirstName : {x.FirstName}\nLastName : {x.LastName}\nPassword : {x.Password}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("user not inserted");
+                    Console.ResetColor();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+            }
+        
+           
         }
         static void updateUser()
         {
@@ -46,15 +84,25 @@ namespace UserManagementApp
             string FirstName = Console.ReadLine();
             Console.Write("Enter New LastName : ");
             string LastName = Console.ReadLine();
+            try
+            {
+
            var x = userProcess.UpdateUser(id, FirstName, LastName);
             if(x)
             {
-
-            Console.WriteLine("user Updated");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("user Updated");
+                Console.ResetColor();
             }
             else
             {
-                Console.WriteLine("Enter valid id");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Enter valid id"); Console.ResetColor();
+            }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
            
         }
@@ -62,14 +110,20 @@ namespace UserManagementApp
         {
             Console.Write("Enter UserId to Remove : ");
             int id =int.Parse(Console.ReadLine());
+            
            var x = userProcess.RemoveUser(id);
             if(x)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("User deleted");
+                Console.ResetColor();
+
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Enter Correct id");
+                Console.ResetColor();
             }
         }
 
@@ -87,9 +141,21 @@ namespace UserManagementApp
         static void findRoleById()
         {
             Console.Write("Enter RoleId : ");
+            
             var x = roleProcess.FindRolebyId(int.Parse(Console.ReadLine()));
             //   Console.WriteLine($"{x.UserId} | {x.UserName} | {x.FirstName} | {x.LastName} | {x.Password} | {x.IsActive}");
-            Console.WriteLine($"RoleName : {x.RoleName}\nRoleDescription : {x.RoleDescription}\n");
+            if(x is not null)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"RoleName : {x.RoleName}\nRoleDescription : {x.RoleDescription}\n");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Role Not Found");
+                Console.ResetColor();
+            }
         }
         static void insertNewRole()
         {
@@ -99,24 +165,46 @@ namespace UserManagementApp
             string roleDescription = Console.ReadLine();
           
             var x = roleProcess.InsertRole(rolename, roleDescription);
-            Console.WriteLine("Role Inserted");
-            Console.WriteLine($"RoleName : {x.RoleName}\nRoleDescription : {x.RoleDescription}");
-        }
-        static void updateRole()
-        {
-            Console.Write("Enter Role Id : )");
-            int id =int.Parse(Console.ReadLine());
-            Console.Write("Enter new RoleDescription : ");
-            string roleDescription = Console.ReadLine();
-     var x = roleProcess.UpdateRole(id,roleDescription);
-            if (x)
+            if(x is not null)
             {
-
-                Console.WriteLine("Roles Updated");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Role Inserted");
+            Console.WriteLine($"RoleName : {x.RoleName}\nRoleDescription : {x.RoleDescription}");
+                Console.ResetColor();
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Insertion Failed");
+                Console.ResetColor();
+            }
+        }
+        static void updateRole()
+        {
+            Console.Write("Enter Role Id : ");
+            int id =int.Parse(Console.ReadLine());
+            Console.Write("Enter new RoleDescription : ");
+            string roleDescription = Console.ReadLine();
+            try
+            {
+
+     var x = roleProcess.UpdateRole(id,roleDescription);
+            if (x)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Roles Updated");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Enter valid id");
+                Console.ResetColor();
+            }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
         }
@@ -127,11 +215,15 @@ namespace UserManagementApp
             var x = roleProcess.RemoveRole(id);
             if (x)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Roles deleted");
+                Console.ResetColor();
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Enter Correct id");
+                Console.ResetColor();
             }
         }
 
