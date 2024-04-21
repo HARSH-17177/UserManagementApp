@@ -98,5 +98,27 @@ namespace UserManagementProcess
                 return false;
             }
         }
+
+        public bool UpdateRole(int userId, int roleId)
+        {
+            try
+            {
+                UserRole ur = new UserRole();
+                ur.UserId = userId;
+                ur.RoleId = roleId;
+                ur.IsActive = true;
+
+            var data=    coll.UpdateUserRole(ur);
+                if(data != null) { return true; }
+                return false;
+            }
+            catch
+            {
+                throw;
+            }
+
+
+
+        }
     }
 }
