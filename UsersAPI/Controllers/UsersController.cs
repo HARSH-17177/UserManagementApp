@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using UserManagementProcess;
 using System.Collections.Generic;
 using UserManagement.TableCreation;
+using ProductsApiService.Infrastructure;
 
 namespace UsersAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [CustomAuthorization]
     public class UsersController : ControllerBase
     {
         private readonly UserProcess _userProcess;
@@ -57,19 +59,21 @@ namespace UsersAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok("User Updated");
+            var model = _userProcess.FindUserById(id);
+            return Ok(model);
         }
 
         // DELETE: /api/users/delete/{id}
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteUser(int id)
         {
+            var user = _userProcess.FindUserById(id);
             var isDeleted = _userProcess.RemoveUser(id);
             if (!isDeleted)
             {
                 return NotFound();
             }
-            return Ok("User Deleted");
+            return Ok(user);
         }
 
         // POST: /api/users/mapusertoroles

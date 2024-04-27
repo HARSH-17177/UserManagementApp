@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AuthorizationLibrary\AuthorizationLibrary.csproj" />
     <ProjectReference Include="..\REpository\UserManagement.Repository.csproj" />
     <ProjectReference Include="..\UserManagement.TableCreation\UserManagement.TableCreation.csproj" />
     <ProjectReference Include="..\UserManagementProcess\UserManagementProcess.csproj" />

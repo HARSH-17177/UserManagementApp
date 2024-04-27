@@ -1,6 +1,15 @@
+using AuthenticationAPI.Models;
+using AuthenticationAPI.Services;
+
+using UserManagement.TableCreation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddScoped<IUserServiceAsync, UserService>();
+builder.Services.AddScoped<TableCreationDbContext>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -16,7 +25,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+app.UseMiddleware<JwtMiddleware>();
+
+//app.UseAuthorization();
 
 app.MapControllers();
 

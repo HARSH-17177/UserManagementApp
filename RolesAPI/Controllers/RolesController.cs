@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProductsApiService.Infrastructure;
 using UserManagement.TableCreation;
 using UserManagementProcess;
 
@@ -7,6 +8,7 @@ namespace RolesAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [CustomAuthorization]
     public class RolesController : ControllerBase
     {
         private readonly RoleProcess _rolesProcess;
@@ -45,14 +47,16 @@ namespace RolesAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok("Role Updated");
+            var updated = _rolesProcess.FindRolebyId(id) ;
+            return Ok(updated);
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteRole(int id) { 
+        public IActionResult DeleteRole(int id) {
+            var role = _rolesProcess.FindRolebyId(id);
         var isDeleted = _rolesProcess.RemoveRole(id);
             if(!isDeleted) return NotFound();
-            return Ok("User Deleted");
+            return Ok(role);
 
         }
     }
